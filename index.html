@@ -1,299 +1,252 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
   <base target="_top">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>記帳小幫手</title>
+  <!-- 引入 Google Fonts 和 Bootstrap -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
   <style>
-    * { box-sizing: border-box; }
-    
-    body { 
-      padding: 0;
-      margin: 0;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    :root {
+      --primary-color: #06c755; /* LINE Green */
+      --bg-color: #f0f2f5;
+      --card-bg: #ffffff;
+      --expense-color: #ff4d4f;
+      --income-color: #06c755;
     }
-    
-    .container-wrapper {
-      max-width: 480px;
-      margin: 0 auto;
-      padding: 20px;
+
+    body {
+      background-color: var(--bg-color);
+      font-family: 'Noto Sans TC', sans-serif;
+      padding: 15px;
+      color: #333;
     }
-    
-    .header {
-      text-align: center;
-      color: white;
-      padding: 30px 20px 20px;
-      margin-bottom: 20px;
-    }
-    
-    .header h1 {
-      font-size: 28px;
-      font-weight: 700;
-      margin: 0;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    .card-container {
-      background: white;
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-    }
-    
-    /* 標籤頁優化 */
+
+    /* 頂部導航切換 */
     .nav-pills {
-      background: #f8f9fa;
-      border-radius: 16px;
-      padding: 6px;
-      margin-bottom: 24px;
-    }
-    
-    .nav-pills .nav-link {
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 15px;
-      padding: 12px 16px;
-      transition: all 0.3s ease;
-      color: #6c757d;
-    }
-    
-    .nav-pills .nav-link.active {
-      background: linear-gradient(135deg, #00B900 0%, #00a000 100%);
-      color: white;
-      box-shadow: 0 4px 12px rgba(0, 185, 0, 0.3);
-    }
-    
-    /* 表單標籤優化 */
-    .form-label {
-      font-weight: 600;
-      color: #2d3748;
-      margin-top: 20px;
-      margin-bottom: 8px;
-      font-size: 14px;
-      display: block;
-    }
-    
-    .form-label:first-of-type {
-      margin-top: 0;
-    }
-    
-    /* 輸入框優化 */
-    .form-control, .form-select {
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 12px 16px;
-      font-size: 15px;
-      transition: all 0.3s ease;
-    }
-    
-    .form-control:focus, .form-select:focus {
-      border-color: #00B900;
-      box-shadow: 0 0 0 4px rgba(0, 185, 0, 0.1);
-      outline: none;
-    }
-    
-    .form-control::placeholder {
-      color: #a0aec0;
-    }
-    
-    /* 收支類型按鈕組優化 */
-    .btn-group {
-      background: #f8f9fa;
+      background: #e4e6eb;
       border-radius: 12px;
       padding: 4px;
-      display: flex;
-      gap: 4px;
+      margin-bottom: 20px;
     }
-    
-    .btn-group .btn {
-      flex: 1;
-      border: none;
+    .nav-pills .nav-link {
       border-radius: 10px;
-      font-weight: 600;
-      padding: 14px 20px;
-      font-size: 15px;
-      transition: all 0.3s ease;
-    }
-    
-    .btn-outline-danger, .btn-outline-success {
-      background: transparent;
-      color: #6c757d;
-    }
-    
-    .btn-check:checked + .btn-outline-danger {
-      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-      color: white;
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-      transform: translateY(-1px);
-    }
-    
-    .btn-check:checked + .btn-outline-success {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: white;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-      transform: translateY(-1px);
-    }
-    
-    /* 送出按鈕優化 */
-    .btn-line {
-      background: linear-gradient(135deg, #00B900 0%, #00a000 100%);
-      color: white;
-      width: 100%;
+      color: #65676b;
       font-weight: 700;
-      font-size: 16px;
-      padding: 16px;
-      border-radius: 12px;
+      transition: all 0.2s;
+    }
+    .nav-pills .nav-link.active {
+      background-color: #fff;
+      color: var(--primary-color);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    /* 主卡片樣式 */
+    .main-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 25px 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       border: none;
-      margin-top: 24px;
-      box-shadow: 0 6px 20px rgba(0, 185, 0, 0.3);
-      transition: all 0.3s ease;
+    }
+
+    /* 表單標籤 */
+    .form-label {
+      font-size: 0.9rem;
+      color: #65676b;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    /* 收支切換按鈕優化 */
+    .type-selector {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .type-option {
+      flex: 1;
+      position: relative;
+    }
+    .type-option input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .type-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 2px solid #e4e6eb;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #65676b;
+      transition: all 0.2s;
+      background: #fff;
+    }
+    /* 選中狀態 - 支出 (紅) */
+    .type-option input:checked + .type-label.expense {
+      border-color: var(--expense-color);
+      background-color: #fff1f0;
+      color: var(--expense-color);
+    }
+    /* 選中狀態 - 收入 (綠) */
+    .type-option input:checked + .type-label.income {
+      border-color: var(--income-color);
+      background-color: #f6ffed;
+      color: var(--income-color);
+    }
+
+    /* 輸入框優化 */
+    .form-control, .form-select {
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      padding: 12px;
+      font-size: 1rem;
+      background-color: #f9f9f9;
+      transition: all 0.3s;
+    }
+    .form-control:focus, .form-select:focus {
+      background-color: #fff;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(6, 199, 85, 0.1);
     }
     
-    .btn-line:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 185, 0, 0.4);
+    /* 金額輸入特別大 */
+    #amount_money, #stock_price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #333;
     }
+
+    /* 送出按鈕 */
+    .btn-submit {
+      width: 100%;
+      padding: 15px;
+      border-radius: 15px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-top: 15px;
+      border: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.1s;
+    }
+    .btn-submit:active {
+      transform: scale(0.98);
+    }
+    .btn-money { background: linear-gradient(135deg, #FF6B6B, #FF8E53); color: white; } /* 預設支出紅 */
+    .btn-stock { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; }
     
-    .btn-line:active {
-      transform: translateY(0);
+    /* 動態改變按鈕顏色 */
+    body.mode-income .btn-money {
+      background: linear-gradient(135deg, #06c755, #2ecc71);
     }
-    
-    /* Select 下拉箭頭優化 */
-    .form-select {
-      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
-      background-size: 16px 12px;
-      padding-right: 40px;
-    }
-    
-    /* 兩欄布局優化 */
-    .row {
-      margin-left: -8px;
-      margin-right: -8px;
-    }
-    
-    .row > .col-6 {
-      padding-left: 8px;
-      padding-right: 8px;
-    }
-    
-    /* 動畫效果 */
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .tab-pane {
-      animation: fadeIn 0.3s ease;
-    }
-    
-    /* 響應式優化 */
-    @media (max-width: 375px) {
-      .card-container {
-        padding: 20px;
-      }
-      
-      .header h1 {
-        font-size: 24px;
-      }
-      
-      .btn-group .btn {
-        font-size: 14px;
-        padding: 12px 16px;
-      }
-    }
+
+    /* 股票買賣切換 */
+    .stock-action-group .btn-outline-danger.active { background-color: var(--expense-color); color: white; }
+    .stock-action-group .btn-outline-success.active { background-color: var(--income-color); color: white; }
+
   </style>
 </head>
 <body>
-  <div class="container-wrapper">
-    <div class="header">
-      <h1>💰 記帳小幫手</h1>
-    </div>
+
+  <!-- 頂部切換 -->
+  <ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
+    <li class="nav-item">
+      <button class="nav-link active" id="pills-money-tab" data-bs-toggle="pill" data-bs-target="#pills-money" type="button">💰 一般記帳</button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" id="pills-stock-tab" data-bs-toggle="pill" data-bs-target="#pills-stock" type="button">📈 股票交易</button>
+    </li>
+  </ul>
+
+  <div class="tab-content" id="pills-tabContent">
     
-    <div class="card-container">
-      <!-- 分頁切換 -->
-      <ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
-        <li class="nav-item">
-          <button class="nav-link active" id="pills-money-tab" data-bs-toggle="pill" data-bs-target="#pills-money" type="button">💰 一般記帳</button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-link" id="pills-stock-tab" data-bs-toggle="pill" data-bs-target="#pills-stock" type="button">📈 股票交易</button>
-        </li>
-      </ul>
-
-      <div class="tab-content" id="pills-tabContent">
+    <!-- 1. 一般記帳介面 -->
+    <div class="tab-pane fade show active" id="pills-money">
+      <div class="main-card">
         
-        <!-- 1. 一般記帳表單 -->
-        <div class="tab-pane fade show active" id="pills-money">
-          <form id="moneyForm">
-            <label class="form-label">收支類型</label>
-            <div class="btn-group w-100" role="group">
-              <input type="radio" class="btn-check" name="type" id="type_out" value="-" checked onclick="updateBankOptions('expense')">
-              <label class="btn btn-outline-danger" for="type_out">💸 支出</label>
-              
-              <input type="radio" class="btn-check" name="type" id="type_in" value="+" onclick="updateBankOptions('income')">
-              <label class="btn btn-outline-success" for="type_in">📈 收入</label>
-            </div>
-
-            <label class="form-label">選擇帳戶</label>
-            <select class="form-select" id="bank_money">
-              <!-- JavaScript 自動產生 -->
-            </select>
-
-            <label class="form-label">金額</label>
-            <input type="number" class="form-control" id="amount_money" placeholder="輸入金額，例如：100" required>
-
-            <label class="form-label">備註 (選填)</label>
-            <input type="text" class="form-control" id="note_money" placeholder="例如：午餐、交通費">
-
-            <button type="button" class="btn btn-line" onclick="sendMoney()">✓ 送出紀錄</button>
-          </form>
+        <!-- 收支切換 (大按鈕) -->
+        <div class="type-selector">
+          <div class="type-option">
+            <input type="radio" name="type" id="type_out" value="-" checked onclick="setMode('expense')">
+            <label class="type-label expense" for="type_out">💸 支出</label>
+          </div>
+          <div class="type-option">
+            <input type="radio" name="type" id="type_in" value="+" onclick="setMode('income')">
+            <label class="type-label income" for="type_in">📈 收入</label>
+          </div>
         </div>
 
-        <!-- 2. 股票交易表單 -->
-        <div class="tab-pane fade" id="pills-stock">
-          <form id="stockForm">
-            <label class="form-label">交易動作</label>
-            <div class="btn-group w-100" role="group">
-              <input type="radio" class="btn-check" name="stockAction" id="act_buy" value="買" checked>
-              <label class="btn btn-outline-danger" for="act_buy">📉 買進</label>
-              <input type="radio" class="btn-check" name="stockAction" id="act_sell" value="賣">
-              <label class="btn btn-outline-success" for="act_sell">📈 賣出</label>
-            </div>
-
-            <label class="form-label">扣款/入帳銀行</label>
-            <select class="form-select" id="bank_stock">
-              <option value="中信">🏦 中國信託</option>
-              <option value="國泰">🏦 國泰世華</option>
-              <option value="薪轉帳戶">💰 薪轉帳戶</option>
-              <option value="中信外幣">🇺🇸 中信外幣</option>
-            </select>
-
-            <div class="row">
-              <div class="col-6">
-                <label class="form-label">股票代號</label>
-                <input type="text" class="form-control" id="stock_symbol" placeholder="2330 / AAPL" required>
-              </div>
-              <div class="col-6">
-                <label class="form-label">股數</label>
-                <input type="number" class="form-control" id="stock_shares" placeholder="1000" step="0.001" required>
-              </div>
-            </div>
-            
-            <label class="form-label">成交單價</label>
-            <input type="number" class="form-control" id="stock_price" placeholder="600.00" step="0.01" required>
-
-            <button type="button" class="btn btn-line" onclick="sendStock()">✓ 送出交易</button>
-          </form>
+        <div class="mb-3">
+          <label class="form-label">選擇帳戶</label>
+          <select class="form-select form-select-lg" id="bank_money">
+            <!-- JS 動態生成 -->
+          </select>
         </div>
+
+        <div class="mb-3">
+          <label class="form-label">金額</label>
+          <input type="number" class="form-control" id="amount_money" placeholder="0" inputmode="decimal" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">備註 (選填)</label>
+          <input type="text" class="form-control" id="note_money" placeholder="早餐、薪水...">
+        </div>
+
+        <button type="button" class="btn btn-submit btn-money" id="btn-money-submit" onclick="sendMoney()">確認記帳</button>
+      </div>
+    </div>
+
+    <!-- 2. 股票交易介面 -->
+    <div class="tab-pane fade" id="pills-stock">
+      <div class="main-card">
+        
+        <div class="mb-3 text-center">
+          <label class="form-label d-block text-start">交易動作</label>
+          <div class="btn-group w-100 stock-action-group" role="group">
+            <input type="radio" class="btn-check" name="stockAction" id="act_buy" value="買" checked>
+            <label class="btn btn-outline-danger btn-lg w-50" for="act_buy">買進</label>
+            <input type="radio" class="btn-check" name="stockAction" id="act_sell" value="賣">
+            <label class="btn btn-outline-success btn-lg w-50" for="act_sell">賣出</label>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">扣款 / 入帳銀行</label>
+          <select class="form-select" id="bank_stock">
+            <option value="中信">🏦 中國信託</option>
+            <option value="國泰">🏦 國泰世華</option>
+            <option value="薪轉帳戶">💰 薪轉帳戶</option>
+            <option value="中信外幣">🇺🇸 中信外幣</option>
+          </select>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="form-label">股票代號</label>
+            <input type="text" class="form-control" id="stock_symbol" placeholder="2330" style="text-transform:uppercase">
+          </div>
+          <div class="col-6">
+            <label class="form-label">股數</label>
+            <input type="number" class="form-control" id="stock_shares" placeholder="1000" inputmode="decimal">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">成交單價</label>
+          <input type="number" class="form-control" id="stock_price" placeholder="600" inputmode="decimal">
+        </div>
+
+        <button type="button" class="btn btn-submit btn-stock" onclick="sendStock()">確認交易</button>
       </div>
     </div>
   </div>
@@ -302,8 +255,10 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   
   <script>
+    // ⚠️ 記得換成你的 LIFF ID
     var MY_LIFF_ID = '2008642471-EpG4DZ7X'; 
 
+    // 選單資料
     var expenseOptions = [
       { val: "LinePay", text: "🟢 LinePay" },
       { val: "中信卡", text: "💳 中信卡" },
@@ -328,12 +283,21 @@
       }).catch((err) => console.log(err));
     }
 
-    function updateBankOptions(type) {
+    // 切換收支模式 (改變選單 & 按鈕顏色)
+    function setMode(mode) {
+      // 切換 class 以改變按鈕顏色
+      if(mode === 'income') {
+        document.body.classList.add('mode-income');
+        updateBankOptions(incomeOptions);
+      } else {
+        document.body.classList.remove('mode-income');
+        updateBankOptions(expenseOptions);
+      }
+    }
+
+    function updateBankOptions(options) {
       var select = document.getElementById("bank_money");
       select.innerHTML = "";
-      
-      var options = (type === 'expense') ? expenseOptions : incomeOptions;
-      
       options.forEach(function(opt) {
         var el = document.createElement("option");
         el.value = opt.val;
@@ -342,14 +306,15 @@
       });
     }
 
+    // 送出一般記帳
     function sendMoney() {
       var typeEl = document.querySelector('input[name="type"]:checked');
-      var type = typeEl.value;
+      var type = typeEl.value; 
       var bank = document.getElementById('bank_money').value;
       var amount = document.getElementById('amount_money').value;
       var note = document.getElementById('note_money').value;
 
-      if (!amount) { alert("請輸入金額"); return; }
+      if (!amount) { alert("請輸入金額 💸"); return; }
       
       var msg = bank + " " + type + amount + " " + note;
       sendToLine(msg);
@@ -362,7 +327,7 @@
       var shares = document.getElementById('stock_shares').value;
       var price = document.getElementById('stock_price').value;
 
-      if (!symbol || !shares || !price) { alert("請填寫完整資訊"); return; }
+      if (!symbol || !shares || !price) { alert("請填寫完整資訊 📈"); return; }
       var msg = bank + " " + action + " " + symbol + " " + shares + " " + price;
       sendToLine(msg);
     }
@@ -377,7 +342,8 @@
       }
     }
 
-    updateBankOptions('expense');
+    // 初始化
+    setMode('expense');
     initializeLiff();
   </script>
 </body>
