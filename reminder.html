@@ -8,8 +8,9 @@
     body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC",sans-serif;margin:0;padding:24px;background:#fff;color:#333;}
     h1{font-size:18px;margin:0 0 20px;}
     label{display:block;font-size:14px;color:#666;margin:18px 0 6px;}
-    input[type=date],input[type=text]{width:100%;box-sizing:border-box;padding:14px;border:none;background:#f2f2f2;border-radius:12px;font-size:16px;text-align:left;}
-    input[type=date]::-webkit-date-and-time-value{text-align:left;}
+    input[type=text]{width:100%;box-sizing:border-box;padding:14px;border:none;background:#f2f2f2;border-radius:12px;font-size:16px;text-align:left;}
+    .date-field{position:relative;width:100%;box-sizing:border-box;background:#f2f2f2;border-radius:12px;padding:14px;font-size:16px;text-align:left;color:#333;}
+    .date-field input[type=date]{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;border:none;margin:0;padding:0;}
     .row{display:flex;align-items:center;gap:8px;margin-top:18px;}
     .row label{margin:0;font-size:15px;color:#333;}
     button{width:100%;margin-top:30px;padding:16px;border:none;border-radius:30px;background:#111;color:#fff;font-size:16px;font-weight:bold;}
@@ -19,14 +20,20 @@
   <body>
     <h1>快速記錄</h1>
   <label>日期</label>
+  <div class="date-field">
+  <span id="startDateText"></span>
   <input type="date" id="startDate">
+  </div>
   <div class="row">
   <input type="checkbox" id="multiDay">
   <label for="multiDay">連續多天</label>
   </div>
   <div id="endDateWrap" class="hidden">
   <label>結束日期</label>
+  <div class="date-field">
+  <span id="endDateText"></span>
   <input type="date" id="endDate">
+  </div>
   </div>
   <label>內容（誰、做什麼）</label>
   <input type="text" id="content" placeholder="例如：任浚值班上班">
@@ -36,12 +43,31 @@
     const LIFF_ID = "2011014935-d41Xb2VN";
     liff.init({ liffId: LIFF_ID }).catch(function (e) { console.error(e); });
     document.getElementById("multiDay").addEventListener("change", function (e) { document.getElementById("endDateWrap").classList.toggle("hidden", !e.target.checked); });
-    (function () { const t = new Date(); document.getElementById("startDate").value = t.toISOString().slice(0, 10); })();
+    function displayFmt(dateStr) {
+      const d = new Date(dateStr + "T00:00:00");
+      return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日";
+    }
+    function wireDateField(inputId, textId) {
+      const input = document.getElementById(inputId);
+      const text = document.getElementById(textId);
+      input.addEventListener("change", function () {
+        text.textContent = input.value ? displayFmt(input.value) : "";
+      });
+      return input;
+    }
+    const startInput = wireDateField("startDate", "startDateText");
+    const endInput = wireDateField("endDate", "endDateText");
+    (function () {
+      const t = new Date();
+      const iso = t.toISOString().slice(0, 10);
+      startInput.value = iso;
+      document.getElementById("startDateText").textContent = displayFmt(iso);
+    })();
     function fmt(dateStr) { const d = new Date(dateStr + "T00:00:00"); return (d.getMonth() + 1) + "/" + d.getDate(); }
     document.getElementById("submitBtn").addEventListener("click", function () {
-      const start = document.getElementById("startDate").value;
+      const start = startInput.value;
       const multi = document.getElementById("multiDay").checked;
-      const end = document.getElementById("endDate").value;
+      const end = endInput.value;
       const content = document.getElementById("content").value.trim();
       if (!start || !content) { alert("請填寫日期和內容"); return; }
       const text = (multi && end) ? (fmt(start) + "-" + fmt(end) + " " + content) : (fmt(start) + " " + content);
@@ -50,8 +76,3 @@
   </script>
   </body>
 </html>
-
-  </script></label></label></h1>
-  </body>
-  </style></title>
-  </head>
